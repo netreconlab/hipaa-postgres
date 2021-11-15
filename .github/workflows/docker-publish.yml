@@ -9,11 +9,11 @@ on:
   schedule:
      - cron: '19 17 * * *'
   push:
-    branches: [ main ]
+    branches: [ 14-3_1 ]
     # Publish semver tags as releases.
     tags: [ '*.*.*' ]
   pull_request:
-    branches: [ main ]
+    branches: [ 14-3_1 ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -54,7 +54,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
-            latest=true
+            latest=false
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
