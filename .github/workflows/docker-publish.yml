@@ -62,6 +62,6 @@ jobs:
           platforms: linux/amd64, linux/arm64/v8, linux/ppc64le, linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            type=raw,value=14-3_1
+            14-3_1
           labels: ${{ steps.meta.outputs.labels }}
 
