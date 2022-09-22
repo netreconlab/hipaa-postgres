@@ -2,7 +2,7 @@ FROM postgres:14-bullseye
 MAINTAINER Network Reconnaissance Lab <baker@cs.uky.edu>
 
 ENV POSTGIS_MAJOR 3
-ENV POSTGIS_VERSION 3.2.1+dfsg-1.pgdg110+1
+ENV POSTGIS_VERSION 3.3.1+dfsg-1.pgdg110+1
 
 RUN apt-get update \
       && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
