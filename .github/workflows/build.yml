@@ -65,7 +65,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          platforms: linux/amd64, linux/arm64/v8, linux/ppc64le, linux/arm/v6, linux/s390x
+          platforms: linux/amd64, linux/arm64/v8, linux/ppc64le, linux/arm/v6
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
