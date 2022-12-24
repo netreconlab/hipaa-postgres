@@ -129,5 +129,19 @@ RUN set -eux \
 # print PostGIS_Full_Version() for the log. ( experimental & internal )
     && cat /_pgis_full_version.txt
 
-COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/10_postgis.sh
-COPY ./update-postgis.sh /usr/local/bin
+COPY ../scripts/initdb-postgis.sh /docker-entrypoint-initdb.d/10_postgis.sh
+COPY ../scripts/update-postgis.sh /usr/local/bin
+
+#Install additional scripts. These are run in abc order during initial start
+COPY ../scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/setup-0-pgaudit.sh
+COPY ../scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh
+RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/setup-dbs.sh
+
+#Install script for ParseCareKit to be run after first run
+RUN mkdir parseScripts
+COPY ../scripts/setup-parse-index.sh ./parseScripts/setup-parse-index.sh
+RUN chmod +x ./parseScripts/setup-parse-index.sh
+
+ENV POSTGRES_INITDB_ARGS "--data-checksums"
+
+CMD ["postgres", "-c", "shared_preload_libraries=pgaudit"]
