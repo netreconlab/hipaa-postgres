@@ -24,6 +24,11 @@ You can learn more about configuring hipaa-postgres [here]().
 
 **Use at your own risk. There is not promise that this is HIPAA compliant and we are not responsible for any mishandling of your data**
 
+## Images
+Images of parse-hipaa are automatically built for your convenience. Images can be found at the following locations:
+- [Docker - Hosted on Docker Hub](https://hub.docker.com/r/netreconlab/hipaa-postgres)
+- [Singularity - Hosted on GitHub Container Registry](https://github.com/netreconlab/hipaa-postgres/pkgs/container/hipaa-postgres)
+
 ### Environment Variables
 
 #### netreconlab/hipaa-postgres
