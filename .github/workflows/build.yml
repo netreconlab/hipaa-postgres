@@ -113,7 +113,7 @@ jobs:
         with:
           file: alpine/Dockerfile
           context: ./
-          platforms: linux/arm64/v8, linux/ppc64le
+          platforms: linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
