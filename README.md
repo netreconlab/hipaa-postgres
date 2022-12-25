@@ -29,9 +29,9 @@ Images of parse-hipaa are automatically built for your convenience. Images can b
 - [Docker - Hosted on Docker Hub](https://hub.docker.com/r/netreconlab/hipaa-postgres)
 - [Singularity - Hosted on GitHub Container Registry](https://github.com/netreconlab/hipaa-postgres/pkgs/container/hipaa-postgres)
 
-### Environment Variables
+## Environment Variables
 
-#### netreconlab/hipaa-postgres
+### netreconlab/hipaa-postgres
 ```
 POSTGRES_PASSWORD #Password for postgress db cluster
 PG_PARSE_USER #Username for logging into PG_PARSE_DB
@@ -39,7 +39,7 @@ PG_PARSE_PASSWORD #Password for logging into PG_PARSE_DB
 PG_PARSE_DB #Name of parse-hipaa database
 ```
 
-### Starting up hipaa-postgres
+## Starting up hipaa-postgres
 
 Imporant Note: On the very first run of hipaa-postgres needs time to setup and will not allow connections until it is ready. This is suppose to happen as time is needed to configure, initialize, install necessary extensions, and setup any default databases. Let it keep running and eventually you will see something like:
 
@@ -47,7 +47,7 @@ Imporant Note: On the very first run of hipaa-postgres needs time to setup and w
 
 Afterwards, hipaa-postfgress will allow all connections. 
 
-### Congiguring
+## Configuring
 If you are plan on using hipaa-postgres in production. You should run the additional scripts to create the rest of the indexes for optimized queries.
 
 The `setup-parse-index.sh` file is already in the container. You just have to run it.
