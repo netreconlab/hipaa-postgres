@@ -178,7 +178,6 @@ jobs:
       fail-fast: false
       matrix:
         recipe: ["Singularity"]
-    if: github.event_name != 'pull_request'
     steps:
       - name: Check out code for the container build
         uses: actions/checkout@v3
@@ -190,7 +189,7 @@ jobs:
       - name: Get Build Release version
         run: echo "TAG=${GITHUB_REF/refs\//}" >> $GITHUB_ENV
       - name: Build Branch Container
-        if: ${{ env.keepgoing == 'true' }} && github.ref != 'refs/heads/main'
+        if: ${{ env.keepgoing == 'true' }}
         env:
           recipe: ${{ matrix.recipe }}
         run: |
