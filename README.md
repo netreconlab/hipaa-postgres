@@ -18,7 +18,7 @@ You will still need to setup the following on your own to be fully HIPAA complia
 - [ ] Encryption at rest - Mount to your own encrypted storage drive (Linux and macOS have API's for this) and store the drive in a "safe" location
 - [ ] Be sure to do anything else HIPAA requires
 
-The [CareKitSample-ParseCareKit](https://github.com/netreconlab/CareKitSample-ParseCareKit) app uses this image alongise parse-hipaa and [ParseCareKit](https://github.com/netreconlab/ParseCareKit).
+The [CareKitSample-ParseCareKit](https://github.com/netreconlab/CareKitSample-ParseCareKit) app uses this image alongise parse-hipaa and [ParseCareKit](https://github.com/netreconlab/ParseCareKit). If you are looking for a Mongo variant, checkout [hipaa-mongo](https://github.com/netreconlab/hipaa-mongo).
 
 **Use at your own risk. There is not promise that this is HIPAA compliant and we are not responsible for any mishandling of your data**
 
