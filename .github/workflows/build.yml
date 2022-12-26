@@ -60,6 +60,8 @@ jobs:
           tags: |
             type=ref,event=branch,enable=false
             type=schedule,enable=true,priority=1000,prefix=,suffix=,pattern=nightly
+            type=ref,event=tag
+            type=ref,event=pr
 
       - name: Extract Docker metadata for latest
         if: github.ref == 'refs/heads/$LATEST'
@@ -72,6 +74,8 @@ jobs:
           tags: |
             type=ref,event=branch,enable=true
             type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
+            type=ref,event=tag
+            type=ref,event=pr
 
       - name: Extract Docker metadata for other
         if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/$LATEST'
@@ -84,6 +88,8 @@ jobs:
           tags: |
             type=ref,event=branch,enable=true
             type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
+            type=ref,event=tag
+            type=ref,event=pr
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
