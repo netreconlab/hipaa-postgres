@@ -62,7 +62,7 @@ jobs:
             type=schedule,enable=true,priority=1000,prefix=,suffix=,pattern=nightly
 
       - name: Extract Docker metadata for latest
-        if: github.ref == 'refs/heads/${{ env.LATEST }}'
+        if: github.ref == 'refs/heads/$LATEST'
         id: meta-latest
         uses: docker/metadata-action@v4
         with:
