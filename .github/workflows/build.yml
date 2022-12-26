@@ -49,20 +49,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract Docker metadata for main
-        if: github.ref == 'refs/heads/main'
-        id: meta-main
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=false
-          tags: |
-            type=ref,event=branch,enable=false
-            type=schedule,enable=true,priority=1000,prefix=,suffix=,pattern=nightly
-            type=ref,event=tag
-            type=ref,event=pr
-
       - name: Extract Docker metadata for latest
         if: github.ref == 'refs/heads/$LATEST'
         id: meta-latest
@@ -73,12 +59,12 @@ jobs:
             latest=true
           tags: |
             type=ref,event=branch,enable=true
-            type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
+            type=schedule,enable=false,pattern=nightly
             type=ref,event=tag
             type=ref,event=pr
 
       - name: Extract Docker metadata for other
-        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/$LATEST'
+        if: github.ref != 'refs/heads/$LATEST'
         id: meta-other
         uses: docker/metadata-action@v4
         with:
@@ -87,7 +73,7 @@ jobs:
             latest=false
           tags: |
             type=ref,event=branch,enable=true
-            type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
+            type=schedule,enable=false,pattern=nightly
             type=ref,event=tag
             type=ref,event=pr
 
@@ -138,27 +124,6 @@ jobs:
            ls
          fi
 
-      - name: Build Nightly Container
-        if: github.ref == 'refs/heads/main'
-        env:
-          recipe: ${{ matrix.recipe }}
-        run: |
-         ls
-         if [ -f "${{ matrix.recipe }}" ]; then
-            sudo -E singularity build container.sif ${{ matrix.recipe }}
-            tag=$(echo "${recipe/Singularity\./}")
-            if [ "$tag" == "Singularity" ]; then
-                tag=nightly
-            fi
-            # Build the container and name by tag
-            echo "Tag is $tag."
-            echo "tag=$tag" >> $GITHUB_ENV
-         else
-           echo "${{ matrix.recipe }} is not found."
-           echo "Present working directory: $PWD"
-           ls
-         fi
-
       - name: Login and Deploy Container
         if: (github.event_name != 'pull_request')
         env:
@@ -178,7 +143,7 @@ jobs:
       fail-fast: false
       matrix:
         recipe: ["Singularity"]
-    if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request'
     steps:
       - name: Check out code for the container build
         uses: actions/checkout@v3
