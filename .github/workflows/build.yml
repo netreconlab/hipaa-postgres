@@ -9,11 +9,12 @@ on:
   schedule:
     - cron: '19 17 * * *'
   push:
-    branches: [ main ]
+    branches: [ main, 15-3.3, 14-3.3 ]
   pull_request:
     branches: [ main ]
 
 env:
+  LATEST: '15-3.3'
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
@@ -50,17 +51,38 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
+      - name: Extract Docker metadata for main
+        if: ${GITHUB_REF##*/} == 'main'
+        id: meta-main
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=ref,event=branch,enable=false
+
+      - name: Extract Docker metadata for latest
+        if: ${ GITHUB_REF##*/ } == ${{ env.LATEST }} 
+        id: meta-latest
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=true
           tags: |
-            type=ref,event=branch,enable=false
+            type=ref,event=branch,enable=true
+
+      - name: Extract Docker metadata for other
+        if: ${ GITHUB_REF##*/ } != 'main' &&  ${ GITHUB_REF##*/ } != ${{ env.LATEST }} 
+        id: meta-other
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=ref,event=branch,enable=true
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
