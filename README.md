@@ -6,9 +6,9 @@
 
 ---
 
-A simple Postgres image built with PostGIS and PGAudit. Designed for [parse-hipaa](https://github.com/netreconlab/parse-hipaa) but can be used anywhere Postgres as used. These docker images include the necessary database auditing and logging for HIPAA compliance. hipaa-postgres is derived from [postgis](https://hub.docker.com/r/postgis/postgis) which is an extention built on top of the [official postgres image](https://hub.docker.com/_/postgres).
+A simple Postgres image built with PostGIS and PGAudit. Designed for [parse-hipaa](https://github.com/netreconlab/parse-hipaa) but can be used anywhere Postgres is used. These docker images include the necessary database auditing and logging for HIPAA compliance. hipaa-postgres is derived from [postgis](https://hub.docker.com/r/postgis/postgis) which is an extention built on top of the [official postgres image](https://hub.docker.com/_/postgres).
 
-The parse-hipaa repo provides the following:
+hipaa-postgres provides the following:
 - [x] Auditing & logging
 - [x] Ready for encryption in transit - run behind a proxy with files & directions on how to [complete the process](https://github.com/netreconlab/parse-hipaa#deploying-on-a-real-system) with Nginx and LetsEncrypt 
 
@@ -20,18 +20,15 @@ You will still need to setup the following on your own to be fully HIPAA complia
 
 The [CareKitSample-ParseCareKit](https://github.com/netreconlab/CareKitSample-ParseCareKit) app uses this image alongise parse-hipaa and [ParseCareKit](https://github.com/netreconlab/ParseCareKit).
 
-You can learn more about configuring hipaa-postgres [here]().
-
 **Use at your own risk. There is not promise that this is HIPAA compliant and we are not responsible for any mishandling of your data**
 
 ## Images
-Images of parse-hipaa are automatically built for your convenience. Images can be found at the following locations:
+Multiple images are automatically built for your convenience. Images can be found at the following locations:
 - [Docker - Hosted on Docker Hub](https://hub.docker.com/r/netreconlab/hipaa-postgres)
 - [Singularity - Hosted on GitHub Container Registry](https://github.com/netreconlab/hipaa-postgres/pkgs/container/hipaa-postgres)
 
 ## Environment Variables
 
-### netreconlab/hipaa-postgres
 ```
 POSTGRES_PASSWORD #Password for postgress db cluster
 PG_PARSE_USER #Username for logging into PG_PARSE_DB
