@@ -166,7 +166,11 @@ jobs:
             fi
 
   singularity-branch:
-    needs: docker-other
+    needs: [docker-latest, docker-other]
+    if: |
+      always()
+      && contains(needs.*.result, 'success')
+      && !contains(needs.*.result, 'failure')
     runs-on: ubuntu-latest
     container:
       image: quay.io/singularity/singularity:v3.10.4
