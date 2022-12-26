@@ -9,11 +9,12 @@ on:
   schedule:
     - cron: '19 17 * * *'
   push:
-    branches: [ main ]
+    branches: [ main, 14-3.3, 15-3.3 ]
   pull_request:
     branches: [ main ]
 
 env:
+  LATEST: '15-3.3'
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
@@ -41,8 +42,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
       - name: Log into dockerhub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
@@ -50,18 +49,42 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
-        id: meta
+      - name: Extract Docker metadata for main
+        if: github.ref == 'refs/heads/main'
+        id: meta-main
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=ref,event=branch,enable=false
+            type=schedule,enable=true,priority=1000,prefix=,suffix=,pattern=nightly
+
+      - name: Extract Docker metadata for latest
+        if: github.ref == 'refs/heads/$LATEST'
+        id: meta-latest
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=true
+          tags: |
+            type=ref,event=branch,enable=true
+            type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
 
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
+      - name: Extract Docker metadata for other
+        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/$LATEST'
+        id: meta-other
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
+          tags: |
+            type=ref,event=branch,enable=true
+            type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
@@ -86,13 +109,14 @@ jobs:
         run: |
           if [[ -f "${{ matrix.recipe }}" ]]; then
             echo "keepgoing=true" >> $GITHUB_ENV
-          fi          
-      - name: Build Container
-        if: ${{ env.keepgoing == 'true' }}
+          fi
+
+      - name: Build Latest Container
+        if: github.ref == 'refs/heads/$LATEST'
         env:
           recipe: ${{ matrix.recipe }}
         run: |
-         ls 
+         ls
          if [ -f "${{ matrix.recipe }}" ]; then
             sudo -E singularity build container.sif ${{ matrix.recipe }}
             tag=$(echo "${recipe/Singularity\./}")
@@ -107,6 +131,79 @@ jobs:
            echo "Present working directory: $PWD"
            ls
          fi
+
+      - name: Build Nightly Container
+        if: github.ref == 'refs/heads/main'
+        env:
+          recipe: ${{ matrix.recipe }}
+        run: |
+         ls
+         if [ -f "${{ matrix.recipe }}" ]; then
+            sudo -E singularity build container.sif ${{ matrix.recipe }}
+            tag=$(echo "${recipe/Singularity\./}")
+            if [ "$tag" == "Singularity" ]; then
+                tag=nightly
+            fi
+            # Build the container and name by tag
+            echo "Tag is $tag."
+            echo "tag=$tag" >> $GITHUB_ENV
+         else
+           echo "${{ matrix.recipe }} is not found."
+           echo "Present working directory: $PWD"
+           ls
+         fi
+
+      - name: Login and Deploy Container
+        if: (github.event_name != 'pull_request')
+        env:
+          keepgoing: ${{ env.keepgoing }}
+        run: |         
+            if [[ "${keepgoing}" == "true" ]]; then
+                echo ${{ secrets.GITHUB_TOKEN }} | singularity remote login -u ${{ secrets.GHCR_USERNAME }} --password-stdin oras://ghcr.io
+                singularity push container.sif oras://ghcr.io/${GITHUB_REPOSITORY}:${tag}
+            fi
+
+  singularity-branch:
+    needs: docker
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/singularity/singularity:v3.10.4
+    strategy:
+      fail-fast: false
+      matrix:
+        recipe: ["Singularity"]
+    if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
+    steps:
+      - name: Check out code for the container build
+        uses: actions/checkout@v3
+      - name: Continue if Singularity Recipe Exists
+        run: |
+          if [[ -f "${{ matrix.recipe }}" ]]; then
+            echo "keepgoing=true" >> $GITHUB_ENV
+          fi
+      - name: Get Build Release version
+        run: echo "TAG=${GITHUB_REF/refs\//}" >> $GITHUB_ENV
+      - name: Build Branch Container
+        if: ${{ env.keepgoing == 'true' }} && github.ref != 'refs/heads/main'
+        env:
+          recipe: ${{ matrix.recipe }}
+        run: |
+         ls
+         if [ -f "${{ matrix.recipe }}" ]; then
+            sudo -E singularity build container.sif ${{ matrix.recipe }}
+            tag=$(echo "${recipe/Singularity\./}")
+            if [ "$tag" == "Singularity" ]; then
+                tag=$TAG
+            fi
+            # Build the container and name by tag
+            echo "Tag is $tag."
+            echo "tag=$tag" >> $GITHUB_ENV
+         else
+           echo "${{ matrix.recipe }} is not found."
+           echo "Present working directory: $PWD"
+           ls
+         fi
+
       - name: Login and Deploy Container
         if: (github.event_name != 'pull_request')
         env:
