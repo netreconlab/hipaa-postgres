@@ -61,6 +61,7 @@ jobs:
             latest=false
           tags: |
             type=ref,event=branch,enable=false
+            type=schedule,enable=true,priority=1000,prefix=,suffix=,pattern=nightly
 
       - name: Extract Docker metadata for latest
         if: github.ref == 'refs/heads/${{ env.LATEST }}'
@@ -72,6 +73,7 @@ jobs:
             latest=true
           tags: |
             type=ref,event=branch,enable=true
+            type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
 
       - name: Extract Docker metadata for other
         if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/${{ env.LATEST }}'
@@ -83,6 +85,7 @@ jobs:
             latest=false
           tags: |
             type=ref,event=branch,enable=true
+            type=schedule,enable=false,priority=1000,prefix=,suffix=,pattern=nightly
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
