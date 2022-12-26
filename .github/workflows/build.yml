@@ -112,7 +112,7 @@ jobs:
           fi
 
       - name: Build Latest Container
-        if: ${{ env.keepgoing == 'true' }} && github.ref == 'refs/heads/$LATEST'
+        if: github.ref == 'refs/heads/$LATEST'
         env:
           recipe: ${{ matrix.recipe }}
         run: |
@@ -133,7 +133,7 @@ jobs:
          fi
 
       - name: Build Nightly Container
-        if: ${{ env.keepgoing == 'true' }} && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         env:
           recipe: ${{ matrix.recipe }}
         run: |
@@ -165,7 +165,6 @@ jobs:
 
   singularity-branch:
     needs: docker
-    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
     container:
       image: quay.io/singularity/singularity:v3.10.4
@@ -173,6 +172,7 @@ jobs:
       fail-fast: false
       matrix:
         recipe: ["Singularity"]
+    if: github.ref != 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
       - name: Check out code for the container build
         uses: actions/checkout@v3
