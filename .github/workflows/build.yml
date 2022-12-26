@@ -187,7 +187,7 @@ jobs:
             echo "keepgoing=true" >> $GITHUB_ENV
           fi
       - name: Get Build Release version
-        run: echo "TAG=${GITHUB_REF/refs\//}" >> $GITHUB_ENV
+        run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Build Branch Container
         if: ${{ env.keepgoing == 'true' }}
         env:
