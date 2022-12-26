@@ -30,10 +30,10 @@ Multiple images are automatically built for your convenience. Images can be foun
 ## Environment Variables
 
 ```
-POSTGRES_PASSWORD #Password for postgress db cluster
-PG_PARSE_USER #Username for logging into PG_PARSE_DB
-PG_PARSE_PASSWORD #Password for logging into PG_PARSE_DB
-PG_PARSE_DB #Name of parse-hipaa database
+POSTGRES_PASSWORD # Password for postgress db cluster
+PG_PARSE_USER # Username for logging into PG_PARSE_DB
+PG_PARSE_PASSWORD # Password for logging into PG_PARSE_DB
+PG_PARSE_DB # Name of parse-hipaa database
 ```
 
 ## Starting up hipaa-postgres
