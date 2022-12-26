@@ -127,6 +127,9 @@ jobs:
       matrix:
         recipe: ["Singularity"]
     steps:
+      - name: Sleep for 2 minutes
+        run: sleep 120s
+        shell: bash
       - name: Check out code for the container build
         uses: actions/checkout@v3
       - name: Continue if Singularity Recipe Exists
@@ -177,6 +180,9 @@ jobs:
         recipe: ["Singularity"]
     if: github.event_name != 'pull_request'
     steps:
+      - name: Sleep for 2 minutes
+        run: sleep 120s
+        shell: bash
       - name: Check out code for the container build
         uses: actions/checkout@v3
       - name: Continue if Singularity Recipe Exists
