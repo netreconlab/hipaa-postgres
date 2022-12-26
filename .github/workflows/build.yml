@@ -52,7 +52,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker metadata for main
-        if: ${GITHUB_REF##*/} == 'main'
+        if: ${{ GITHUB_REF##*/ }} == 'main'
         id: meta-main
         uses: docker/metadata-action@v4
         with:
@@ -63,7 +63,7 @@ jobs:
             type=ref,event=branch,enable=false
 
       - name: Extract Docker metadata for latest
-        if: ${ GITHUB_REF##*/ } == ${{ env.LATEST }} 
+        if: ${{ GITHUB_REF##*/ }} == ${{ env.LATEST }} 
         id: meta-latest
         uses: docker/metadata-action@v4
         with:
@@ -74,7 +74,7 @@ jobs:
             type=ref,event=branch,enable=true
 
       - name: Extract Docker metadata for other
-        if: ${ GITHUB_REF##*/ } != 'main' &&  ${ GITHUB_REF##*/ } != ${{ env.LATEST }} 
+        if: ${{ GITHUB_REF##*/ }} != 'main' &&  ${{ GITHUB_REF##*/ }} != ${{ env.LATEST }} 
         id: meta-other
         uses: docker/metadata-action@v4
         with:
