@@ -31,7 +31,7 @@ jobs:
       contents: read
       packages: write
 
-    if: github.ref == 'refs/heads/$LATEST'
+    if: github.ref == 'refs/heads/15-3.3'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -96,7 +96,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker metadata
-        if: github.ref != 'refs/heads/$LATEST'
+        if: github.ref != 'refs/heads/15-3.3'
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -127,9 +127,6 @@ jobs:
       matrix:
         recipe: ["Singularity"]
     steps:
-      - name: Sleep for 2 minutes
-        run: sleep 120s
-        shell: bash
       - name: Check out code for the container build
         uses: actions/checkout@v3
       - name: Continue if Singularity Recipe Exists
@@ -139,7 +136,7 @@ jobs:
           fi
 
       - name: Build Latest Container
-        if: github.ref == 'refs/heads/$LATEST'
+        if: github.ref == 'refs/heads/15-3.3'
         env:
           recipe: ${{ matrix.recipe }}
         run: |
@@ -180,9 +177,6 @@ jobs:
         recipe: ["Singularity"]
     if: github.event_name != 'pull_request'
     steps:
-      - name: Sleep for 2 minutes
-        run: sleep 120s
-        shell: bash
       - name: Check out code for the container build
         uses: actions/checkout@v3
       - name: Continue if Singularity Recipe Exists
