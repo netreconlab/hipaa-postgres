@@ -109,18 +109,44 @@ jobs:
         run: |
           if [[ -f "${{ matrix.recipe }}" ]]; then
             echo "keepgoing=true" >> $GITHUB_ENV
-          fi          
-      - name: Build Container
-        if: ${{ env.keepgoing == 'true' }}
+          fi
+      - name: Get Build Release version
+        run: echo "TAG=${GITHUB_REF/refs\//}" >> $GITHUB_ENV
+      - name: Build Branch Container
+        if: ${{ env.keepgoing == 'true' }} && github.ref != 'refs/heads/main'
         env:
           recipe: ${{ matrix.recipe }}
         run: |
-         ls 
+         ls
          if [ -f "${{ matrix.recipe }}" ]; then
             sudo -E singularity build container.sif ${{ matrix.recipe }}
             tag=$(echo "${recipe/Singularity\./}")
             if [ "$tag" == "Singularity" ]; then
                 tag=latest
+            fi
+      - name: Build Latest Container
+        if: ${{ env.keepgoing == 'true' }} && github.ref == 'refs/heads/$LATEST'
+        env:
+          recipe: ${{ matrix.recipe }}
+        run: |
+         ls
+         if [ -f "${{ matrix.recipe }}" ]; then
+            sudo -E singularity build container.sif ${{ matrix.recipe }}
+            tag=$(echo "${recipe/Singularity\./}")
+            if [ "$tag" == "Singularity" ]; then
+                tag=latest
+            fi
+      - name: Build Nightly Container
+        if: ${{ env.keepgoing == 'true' }} && github.ref == 'refs/heads/main'
+        env:
+          recipe: ${{ matrix.recipe }}
+        run: |
+         ls
+         if [ -f "${{ matrix.recipe }}" ]; then
+            sudo -E singularity build container.sif ${{ matrix.recipe }}
+            tag=$(echo "${recipe/Singularity\./}")
+            if [ "$tag" == "Singularity" ]; then
+                tag=nightly
             fi
             # Build the container and name by tag
             echo "Tag is $tag."
