@@ -3,7 +3,7 @@ FROM perconalab/percona-distribution-postgresql:15.1
 ENV PG_MAJOR 15
 ENV POSTGIS_MAJOR 3
 ENV POSTGIS_VERSION 3.3.2+dfsg-1.pgdg110+1
-ENV PGDATA /data/db
+ENV PGDATA /var/lib/postgresql/data
 
 USER root
 
