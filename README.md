@@ -1,6 +1,6 @@
 # hipaa-postgres
 
-[![Docker Hub](https://dockeri.co/image/netreconlab/hipaa-postgres)](https://hub.docker.com/r/netreconlab/hipaa-postgres)
+[![](https://dockeri.co/image/netreconlab/hipaa-postgres)](https://hub.docker.com/r/netreconlab/hipaa-postgres)
 [![Docker](https://github.com/netreconlab/hipaa-postgres/actions/workflows/build.yml/badge.svg)](https://github.com/netreconlab/hipaa-postgres/actions/workflows/build.yml)
 [![Docker](https://github.com/netreconlab/hipaa-postgres/actions/workflows/release.yml/badge.svg)](https://github.com/netreconlab/hipaa-postgres/actions/workflows/release.yml)
 
