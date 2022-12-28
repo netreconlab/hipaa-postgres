@@ -36,9 +36,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Get branch name
-        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
       - name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v2
@@ -52,6 +49,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Get branch name
+        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Extract Docker metadata for latest release
         if: env.BRANCH == env.LATEST
