@@ -13,6 +13,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     ALTER SYSTEM SET pgaudit.log = 'all, -misc';
     ALTER SYSTEM SET pgaudit.log_relation = 'on';
     ALTER SYSTEM SET pgaudit.log_parameter = 'on';
+    ALTER SYSTEM SET shared_preload_libraries = 'set-user';
 EOSQL
 
 exec "$@"
