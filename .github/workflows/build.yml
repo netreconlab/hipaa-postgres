@@ -39,7 +39,7 @@ jobs:
         run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        if: emv.BRANCH == env.LATEST
+        if: env.BRANCH == env.LATEST
         id: qemu
         uses: docker/setup-qemu-action@v2
 
@@ -88,7 +88,7 @@ jobs:
         run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        if: emv.BRANCH == env.LATEST
+        if: env.BRANCH == env.LATEST
         id: qemu
         uses: docker/setup-qemu-action@v2
 
@@ -184,7 +184,7 @@ jobs:
             fi
 
       - name: Login and Deploy Latest Container
-        if: github.ref == 'refs/heads/15-3.3'
+        if: env.BRANCH == env.LATEST
         env:
           keepgoing: ${{ env.keepgoing }}
         run: |
