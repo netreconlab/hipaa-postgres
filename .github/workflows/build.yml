@@ -6,15 +6,10 @@ name: build
 # documentation.
 
 on:
-  schedule:
-    - cron: '19 17 * * *'
-  push:
-    branches: [ main, 14-3.3, 15-3.3 ]
   pull_request:
     branches: [ main ]
 
 env:
-  LATEST: '15-3.3'
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
@@ -43,32 +38,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Log into dockerhub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Get branch name
         run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-      - name: Extract Docker metadata for latest release
-        if: env.BRANCH == env.LATEST
-        id: meta-latest
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=true
-          tags: |
-            type=ref,event=branch,enable=true
-            type=schedule,enable=false,pattern=nightly
-            type=ref,event=tag
-            type=ref,event=pr
-
       - name: Extract Docker metadata for other releases
-        if: env.BRANCH != env.LATEST
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -82,17 +55,7 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
 
-      - name: Build and push Docker image for latest release
-        if: env.BRANCH == env.LATEST
-        uses: docker/build-push-action@v3
-        with:
-          platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-latest.outputs.tags }}
-          labels: ${{ steps.meta-latest.outputs.labels }}
-
       - name: Build and push Docker image for other releases
-        if: env.BRANCH != env.LATEST
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
