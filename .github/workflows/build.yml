@@ -5,9 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
 concurrency:
@@ -15,7 +13,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-          
   docker:
     runs-on: ubuntu-latest
     permissions:
