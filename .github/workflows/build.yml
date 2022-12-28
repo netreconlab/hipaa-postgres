@@ -40,22 +40,27 @@ jobs:
         run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Set up QEMU
+        if: env.BRANCH != env.LATEST
         id: qemu
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
+        if: env.BRANCH != env.LATEST
         uses: docker/setup-buildx-action@v2
 
       - name: Log into dockerhub
+        if: env.BRANCH != env.LATEST
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker metadata
+        if: env.BRANCH != env.LATEST
         id: meta
         uses: docker/metadata-action@v4
         with:
+          if: env.BRANCH != env.LATEST
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
@@ -66,6 +71,7 @@ jobs:
             type=ref,event=pr
 
       - name: Build and push Docker image
+        if: env.BRANCH != env.LATEST
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
