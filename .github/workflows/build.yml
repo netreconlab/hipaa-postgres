@@ -1,10 +1,5 @@
 name: build
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
   pull_request:
     branches: [ main ]
@@ -38,7 +33,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Extract Docker metadata for other releases
+      - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -51,7 +46,7 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
 
-      - name: Build and push Docker image for other releases
+      - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
