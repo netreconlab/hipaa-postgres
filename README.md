@@ -27,6 +27,12 @@ Multiple images are automatically built for your convenience. Images can be foun
 - [Docker - Hosted on Docker Hub](https://hub.docker.com/r/netreconlab/hipaa-postgres)
 - [Singularity - Hosted on GitHub Container Registry](https://github.com/netreconlab/hipaa-postgres/pkgs/container/hipaa-postgres)
 
+### Tags
+- `latest` - Points to the newest released version
+- `main` - Points to most up-to-date code that will eventually show up in a future release. This tag can contain breaking changes
+- `x-x.x` - Points to a specific Postgres and Postgis version
+- `x-x.x-percona` - Points to a specific version that uses the [Percona Distribtution Postgres](https://www.percona.com/software/postgresql-distribution)
+
 ## Additional Packages inside of hipaa-postgres that are enabled automatically
 The following are enabled automatically on either the `PG_PARSE_DB` or `postgres` databases:
 - [PostGIS](https://postgis.net) - spatial database extender for PostgreSQL object-relational database
@@ -38,9 +44,6 @@ The following are enabled automatically on either the `PG_PARSE_DB` or `postgres
 - [wal2json](https://github.com/eulerto/wal2json) - an output plugin for logical decoding
 - [pgStatStatements](https://www.postgresql.org/docs/current/pgstatstatements.html) - provides a means for tracking planning and execution statistics of all SQL statements executed by a server (needed for PMM)
 - [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) - Monitor the health of your database infrastructure, explore new patterns in database behavior, and manage and improve the performance of your databases no matter where they are located or deployed
-    - Username/passed - admin/admin
-    - Goto `Settings->Add Instance to PMM->PostgreSQL`, enter `db` for hostname and the `Username` and `Password` above, then click `Add service`. Note it can take up to 5 minutes for data to start populating. PMM will let you know if it has trouble connecting. You should immediately see that PMM is able to read your database `version` correctly on its dashboard
-    - Learn more about PMM by looking through the [documentation](https://docs.percona.com/percona-monitoring-and-management/index.html)
 
 ## Environment Variables
 
@@ -84,6 +87,18 @@ Default values for environment variables: `POSTGRES_PASSWORD, PG_PARSE_USER, PG_
 ```docker exec -u postgres -ti parse-hipaa_db_1 bash```
 
 You can then make modifications using [psql](http://postgresguide.com/utilities/psql.html). Through psql, you can also add multiple databases and users to support a number of parse apps. Note that you will also need to add the respecting parse-server containers (copy parse container in the .yml and rename to your new app) along with the added app in [postgres-dashboard-config.json](https://github.com/netreconlab/parse-hipaa/blob/master/parse-dashboard-config.json).
+
+## Monitoring your database with Percona Monitoring and Management
+`hipaa-postgres` is configured automatically to allow acces to [PMM](https://www.percona.com/software/database-tools/percona-monitoring-and-management). If you are using the [docker-compose.yml](https://github.com/netreconlab/hipaa-postgres/blob/main/docker-compose.yml) file, this can be accessed by visiting http://localhost:1080/. Additional information is below:
+
+- Username/password - admin/admin, PMM will prompt you to change this on first login
+- Adding your database to PMM
+    1. Goto `Settings->Add Instance to PMM->PostgreSQL`
+    1. Enter `db` for hostname
+    1. For `Username`, enter `PMM_USER` configured in your [environment variable](#environment-variables)
+    1. For `Password`, enter `PMM_PASSWORD` configured in your [environment variable](#environment-variables)
+    1. Click `Add service`... It can take up to 5 minutes for data to start populating in PMM. PMM will let you know if it has trouble connecting immediatly after you perform the steps above. You can see that PMM is able to connect and read your database `version` correctly on the `PostgreSQL` section of the dashboard
+    1. Learn more about PMM by looking through the [documentation](https://docs.percona.com/percona-monitoring-and-management/index.html)
 
 ## Deploying on a real system
 The docker yml's here are intended to run behind a proxy that properly has ssl configured to encrypt data in transit. To create a proxy to parse-hipaa, nginx files are provided [here](https://github.com/netreconlab/parse-hipaa/tree/master/nginx/sites-enabled). Simply add the [sites-available](https://github.com/netreconlab/parse-hipaa/tree/master/nginx/sites-enabled) folder to your nginx directory and add the following to "http" in your nginx.conf:
