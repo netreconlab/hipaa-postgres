@@ -1,4 +1,4 @@
-FROM postgres:14-bullseye
+FROM postgres:15-bullseye
 
 ENV POSTGIS_MAJOR 3
 ENV POSTGIS_VERSION 3.3.2+dfsg-1.pgdg110+1
@@ -10,6 +10,10 @@ RUN apt-get update \
            ca-certificates \
            elephant-shed-pgbackrest \
            elephant-shed-pgbadger \
+           htop \
+           iputils-ping \
+           openssh-server \
+           supervisor \
            \
            postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION \
            postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
@@ -17,7 +21,11 @@ RUN apt-get update \
            postgresql-$PG_MAJOR-set-user \
            postgresql-$PG_MAJOR-repack \
            postgresql-$PG_MAJOR-wal2json \
+           postgresql-$PG_MAJOR-pgpool2\
       && rm -rf /var/lib/apt/lists/*
+
+# Setup directory for supervisor.conf
+RUN mkdir -p /run/sshd
 
 # Install postgis scripts
 RUN mkdir -p /docker-entrypoint-initdb.d
@@ -44,5 +52,7 @@ RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
 RUN mkdir parseScripts
 COPY ./scripts/setup-parse-index.sh ./parseScripts/setup-parse-index.sh
 RUN chmod +x ./parseScripts/setup-parse-index.sh
+
+EXPOSE 5432 22
 
 CMD ["postgres", "-c", "shared_preload_libraries=pgaudit"]

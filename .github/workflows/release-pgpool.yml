@@ -1,4 +1,4 @@
-name: release
+name: release-pgpool
 
 on:
   schedule:
@@ -39,50 +39,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Get branch name
-        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
-      - name: Extract Docker metadata for latest release
-        if: env.BRANCH == env.LATEST
-        id: meta-latest
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=true
-          tags: |
-            type=ref,event=branch,enable=true
-            type=schedule,enable=false,pattern=nightly
-            type=ref,event=tag
-            type=ref,event=pr
-
-      - name: Extract Docker metadata for other releases
-        if: env.BRANCH != env.LATEST
+      - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
+            suffix=-pgpool
           tags: |
             type=ref,event=branch,enable=true
             type=schedule,enable=false,pattern=nightly
             type=ref,event=tag
             type=ref,event=pr
 
-      - name: Build and push Docker image for latest release
-        if: env.BRANCH == env.LATEST
+      - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta-latest.outputs.tags }}
-          labels: ${{ steps.meta-latest.outputs.labels }}
-
-      - name: Build and push Docker image for other releases
-        if: env.BRANCH != env.LATEST
-        uses: docker/build-push-action@v3
-        with:
+          file: Dockerfile.pgpool
           platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
@@ -120,7 +94,7 @@ jobs:
             sudo -E singularity build container.sif ${{ matrix.recipe }}
             tag=$(echo "${recipe/Singularity\./}")
             if [ "$tag" == "Singularity" ]; then
-                tag=$BRANCH
+                tag=$BRANCH-pgpool
             fi
             # Build the container and name by tag
             echo "Tag is $tag."
@@ -144,12 +118,3 @@ jobs:
                 singularity push container.sif oras://ghcr.io/${GITHUB_REPOSITORY}:${tag}
             fi
 
-      - name: Login and Deploy Latest Container
-        if: env.BRANCH == env.LATEST
-        env:
-          keepgoing: ${{ env.keepgoing }}
-        run: |
-            if [[ "${keepgoing}" == "true" ]]; then
-                echo ${{ secrets.GITHUB_TOKEN }} | singularity remote login -u ${{ secrets.GHCR_USERNAME }} --password-stdin oras://ghcr.io
-                singularity push container.sif oras://ghcr.io/${GITHUB_REPOSITORY}:latest
-            fi
