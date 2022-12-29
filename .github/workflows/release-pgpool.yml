@@ -53,7 +53,7 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
 
-      - name: Build and push Docker image for other releases
+      - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           file: Dockerfile.pgpool
