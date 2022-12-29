@@ -6,6 +6,7 @@ psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" 
     CREATE DATABASE ${PG_PARSE_DB} OWNER ${PG_PARSE_USER};
     \c ${PG_PARSE_DB};
     CREATE EXTENSION pg_stat_monitor;
+    CREATE EXTENSION pg_repack;
 EOSQL
 
 exec "$@"

@@ -32,16 +32,16 @@ COPY ./scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/setup-0-pgaudit.sh
 COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/setup-1-pgBadger.sh
 COPY ./scripts/setup-2-wal2json.sh /docker-entrypoint-initdb.d/setup-2-wal2json.sh
 COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/setup-3-pg_repack.sh
-COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh
+# Doesn't need because it has pg_stat_monitor
+#COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh
 COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/setup-5-pmm.sh
 COPY ./scripts/setup-dbs-no-postgis.sh /docker-entrypoint-initdb.d/setup-dbs.sh
-RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \ 
-#COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh \
+#COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh
 RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-1-pgBadger.sh \
       /docker-entrypoint-initdb.d/setup-2-wal2json.sh \
       /docker-entrypoint-initdb.d/setup-3-pg_repack.sh \
-      /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh \
+#      /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh \
       /docker-entrypoint-initdb.d/setup-5-pmm.sh \
       /docker-entrypoint-initdb.d/setup-dbs.sh
 
