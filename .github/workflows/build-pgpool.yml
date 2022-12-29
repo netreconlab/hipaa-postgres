@@ -37,6 +37,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
+            suffix=-pgpool
           tags: |
             type=ref,event=branch,enable=true
             type=schedule,enable=false,pattern=nightly
