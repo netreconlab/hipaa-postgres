@@ -61,7 +61,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          if: env.BRANCH != env.LATEST
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=false
