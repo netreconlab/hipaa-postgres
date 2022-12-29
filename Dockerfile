@@ -12,7 +12,6 @@ RUN apt-get update \
            ca-certificates \
            elephant-shed-pgbackrest \
            elephant-shed-pgbadger \
-           pgxnclient \
            \
            postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION \
            postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
