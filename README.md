@@ -28,10 +28,10 @@ Multiple images are automatically built for your convenience. Images can be foun
 - [Singularity - Hosted on GitHub Container Registry](https://github.com/netreconlab/hipaa-postgres/pkgs/container/hipaa-postgres)
 
 ### Tags
-- `latest` - Points to the newest released version
-- `main` - Points to most up-to-date code that will eventually show up in a future release. This tag can contain breaking changes
-- `x-x.x` - Points to a specific Postgres and Postgis version
-- `x-x.x-percona` - Points to a specific version that uses the [Percona Distribtution Postgres](https://www.percona.com/software/postgresql-distribution)
+- `latest` - Points to the newest released version that uses the standard [Postgres image](https://hub.docker.com/_/postgres)
+- `main` - Points to most up-to-date code that uses the standard [Postgres image](https://hub.docker.com/_/postgres) and will eventually show up in a future release. This tag can contain breaking changes
+- `x-x.x` - Points to a specific Postgres and Postgis version that uses the standard [Postgres image](https://hub.docker.com/_/postgres)
+- `x-x.x-percona` - Points to a specific version that uses the [Percona Distribtution for PostgreSQL](https://www.percona.com/software/postgresql-distribution) image
 
 ## Additional Packages inside of hipaa-postgres that are enabled automatically
 The following are enabled automatically on either the `PG_PARSE_DB` or `postgres` databases:
@@ -60,13 +60,11 @@ PMM_TLS_PORT=443 # This is the default TLS port on the docker image
 
 ## Starting up hipaa-postgres
 
-To get started, the [docker-compose.yml] file provides an example of how to use `hipaa-postgres`, simply type:
+To get started, the [docker-compose.yml](https://github.com/netreconlab/hipaa-postgres/blob/main/docker-compose.yml) file provides an example of how to use `hipaa-postgres`, simply type:
 
 ```docker-compose up```
 
-You can connect to - [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) by going to `localhost:1080` in your browser
-
-Imporant Note: On the very first run of hipaa-postgres needs time to setup and will not allow connections until it is ready. This is suppose to happen as time is needed to configure, initialize, install necessary extensions, and setup any default databases. Let it keep running and eventually you will see something like:
+Imporant Note: On the very first run of hipaa-postgres needs time to setup and will not allow connections until it is ready. This is suppose to happen as time is needed to [configure the necessary scripts/extensions along setup any default databases](https://github.com/netreconlab/hipaa-postgres/tree/main/scripts). `hipaa-postgres` will begin to allow connectoins once it finishes configuring and a message like below will show in the logs:
 
 ```db_1         | PostgreSQL init process complete; ready for start up.```
 
