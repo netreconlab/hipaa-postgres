@@ -1,23 +1,11 @@
 name: build
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 on:
-  schedule:
-    - cron: '19 17 * * *'
-  push:
-    branches: [ main, 14-3.3, 15-3.3 ]
   pull_request:
     branches: [ main ]
 
 env:
-  LATEST: '15-3.3'
-  # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
 concurrency:
@@ -25,13 +13,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  docker-latest:
+  docker:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
-    if: github.ref == 'refs/heads/15-3.3'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -42,58 +29,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-
-      - name: Log into dockerhub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          flavor: |
-            latest=true
-          tags: |
-            type=ref,event=branch,enable=true
-            type=schedule,enable=false,pattern=nightly
-            type=ref,event=tag
-            type=ref,event=pr
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          
-  docker-other:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    if: github.ref != 'refs/heads/15-3.3'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log into dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract Docker metadata
         id: meta
@@ -115,9 +50,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-  
+ 
   singularity:
-    needs: docker-latest
+    needs: docker
     runs-on: ubuntu-latest
     container:
       image: quay.io/singularity/singularity:v3.10.4
@@ -128,67 +63,17 @@ jobs:
     steps:
       - name: Check out code for the container build
         uses: actions/checkout@v3
-      - name: Continue if Singularity Recipe Exists
+
+      - name: Continue if Singularity recipe exists
         run: |
           if [[ -f "${{ matrix.recipe }}" ]]; then
             echo "keepgoing=true" >> $GITHUB_ENV
           fi
 
-      - name: Build Latest Container
-        if: github.ref == 'refs/heads/15-3.3'
-        env:
-          recipe: ${{ matrix.recipe }}
-        run: |
-         ls
-         if [ -f "${{ matrix.recipe }}" ]; then
-            sudo -E singularity build container.sif ${{ matrix.recipe }}
-            tag=$(echo "${recipe/Singularity\./}")
-            if [ "$tag" == "Singularity" ]; then
-                tag=latest
-            fi
-            # Build the container and name by tag
-            echo "Tag is $tag."
-            echo "tag=$tag" >> $GITHUB_ENV
-         else
-           echo "${{ matrix.recipe }} is not found."
-           echo "Present working directory: $PWD"
-           ls
-         fi
+      - name: Get branch name
+        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-      - name: Login and Deploy Container
-        if: (github.event_name != 'pull_request')
-        env:
-          keepgoing: ${{ env.keepgoing }}
-        run: |         
-            if [[ "${keepgoing}" == "true" ]]; then
-                echo ${{ secrets.GITHUB_TOKEN }} | singularity remote login -u ${{ secrets.GHCR_USERNAME }} --password-stdin oras://ghcr.io
-                singularity push container.sif oras://ghcr.io/${GITHUB_REPOSITORY}:${tag}
-            fi
-
-  singularity-branch:
-    needs: [docker-latest, docker-other]
-    if: |
-      always()
-      && contains(needs.*.result, 'success')
-      && !contains(needs.*.result, 'failure')
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/singularity/singularity:v3.10.4
-    strategy:
-      fail-fast: false
-      matrix:
-        recipe: ["Singularity"]
-    steps:
-      - name: Check out code for the container build
-        uses: actions/checkout@v3
-      - name: Continue if Singularity Recipe Exists
-        run: |
-          if [[ -f "${{ matrix.recipe }}" ]]; then
-            echo "keepgoing=true" >> $GITHUB_ENV
-          fi
-      - name: Get Build Release version
-        run: echo "TAG=${GITHUB_REF##*/}" >> $GITHUB_ENV
-      - name: Build Branch Container
+      - name: Create tag for Singularity
         if: ${{ env.keepgoing == 'true' }}
         env:
           recipe: ${{ matrix.recipe }}
@@ -198,7 +83,7 @@ jobs:
             sudo -E singularity build container.sif ${{ matrix.recipe }}
             tag=$(echo "${recipe/Singularity\./}")
             if [ "$tag" == "Singularity" ]; then
-                tag=$TAG
+                tag=$BRANCH
             fi
             # Build the container and name by tag
             echo "Tag is $tag."
@@ -209,12 +94,3 @@ jobs:
            ls
          fi
 
-      - name: Login and Deploy Container
-        if: (github.event_name != 'pull_request')
-        env:
-          keepgoing: ${{ env.keepgoing }}
-        run: |         
-            if [[ "${keepgoing}" == "true" ]]; then
-                echo ${{ secrets.GITHUB_TOKEN }} | singularity remote login -u ${{ secrets.GHCR_USERNAME }} --password-stdin oras://ghcr.io
-                singularity push container.sif oras://ghcr.io/${GITHUB_REPOSITORY}:${tag}
-            fi

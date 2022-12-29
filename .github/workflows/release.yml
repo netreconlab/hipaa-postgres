@@ -2,9 +2,9 @@ name: build
 
 on:
   schedule:
-    - cron: '19 17 * * *'
+    - cron: '19 3 * * *'
   push:
-    branches: [ 15-3.3, 14-3.3, main ]
+    branches: [ main, 14-3.3, 15-3.3 ]
 
 env:
   LATEST: '15-3.3'
@@ -137,7 +137,6 @@ jobs:
           sed -i "s/latest/$tag/" ./Singularity
 
       - name: Login and Deploy Container
-        if: (github.event_name != 'pull_request')
         env:
           keepgoing: ${{ env.keepgoing }}
         run: |         

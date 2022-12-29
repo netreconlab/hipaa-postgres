@@ -18,6 +18,7 @@ RUN apt-get update \
            postgresql-$PG_MAJOR-pgaudit \
            postgresql-$PG_MAJOR-set-user \
            postgresql-$PG_MAJOR-repack \
+           postgresql-$PG_MAJOR-wal2json \
       && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /docker-entrypoint-initdb.d
@@ -29,11 +30,15 @@ COPY ./scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/setup-0-pgaudit.sh
 COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/setup-1-pgBadger.sh
 COPY ./scripts/setup-2-wal2json.sh /docker-entrypoint-initdb.d/setup-2-wal2json.sh
 COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/setup-3-pg_repack.sh
+COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh
+COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/setup-5-pmm.sh
 COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh
 RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-1-pgBadger.sh \
       /docker-entrypoint-initdb.d/setup-2-wal2json.sh \
       /docker-entrypoint-initdb.d/setup-3-pg_repack.sh \
+      /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh \
+      /docker-entrypoint-initdb.d/setup-5-pmm.sh \
       /docker-entrypoint-initdb.d/setup-dbs.sh
 
 # Install script for ParseCareKit to be run after first run
