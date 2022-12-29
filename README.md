@@ -32,9 +32,10 @@ The following are enabled automatically on either the `PG_PARSE_DB` or `postgres
 - [PostGIS](https://postgis.net) - spatial database extender for PostgreSQL object-relational database
 - [pgAudit](https://www.pgaudit.org) - provide the tools needed to produce audit logs required to pass certain government, financial, or ISO certification audits
 - [pgAudit-set_user](https://github.com/pgaudit/set_user) - allows switching users and optional privilege escalation with enhanced logging and control
+- [pgBadger](https://pgbadger.darold.net) - log analyzer built for speed with fully detailed reports and professional rendering
 - [pgBackrest](https://pgbackrest.org) - eliable, easy-to-use backup and restore solution that can seamlessly scale up to the largest databases and workloads by utilizing algorithms that are optimized for database-specific requirements
 - [pg_repack](https://reorg.github.io/pg_repack/) - Reorganize tables in PostgreSQL databases with minimal locks
-- [pgBadger](https://pgbadger.darold.net) - log analyzer built for speed with fully detailed reports and professional rendering
+- [wal2json](https://github.com/eulerto/wal2json) - an output plugin for logical decoding
 - [pgStatStatements](https://www.postgresql.org/docs/current/pgstatstatements.html) - provides a means for tracking planning and execution statistics of all SQL statements executed by a server (needed for PMM)
 - [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) - Monitor the health of your database infrastructure, explore new patterns in database behavior, and manage and improve the performance of your databases no matter where they are located or deployed
     - Username/passed - admin/admin
