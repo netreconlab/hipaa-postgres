@@ -6,7 +6,7 @@
 
 ---
 
-A simple Postgres image built with PostGIS and PGAudit. Designed for [parse-hipaa](https://github.com/netreconlab/parse-hipaa) but can be used anywhere Postgres is used. These docker images include the necessary database auditing and logging for HIPAA compliance. hipaa-postgres is derived from [postgis](https://hub.docker.com/r/postgis/postgis) which is an extention built on top of the [official postgres image](https://hub.docker.com/_/postgres).
+A HIPAA & GDPR compliant ready Postgres Database image with PostGIS and PGAudit. Designed for [parse-hipaa](https://github.com/netreconlab/parse-hipaa) but can be used anywhere Postgres is used. These docker images include the necessary database auditing and logging for HIPAA compliance. `hipaa-postgres` is derived from [postgis](https://hub.docker.com/r/postgis/postgis) which is an extention built on top of the [official postgres image](https://hub.docker.com/_/postgres).
 
 hipaa-postgres provides the following:
 - [x] Auditing & logging
@@ -27,16 +27,41 @@ Multiple images are automatically built for your convenience. Images can be foun
 - [Docker - Hosted on Docker Hub](https://hub.docker.com/r/netreconlab/hipaa-postgres)
 - [Singularity - Hosted on GitHub Container Registry](https://github.com/netreconlab/hipaa-postgres/pkgs/container/hipaa-postgres)
 
+## Additional Packages inside of hipaa-postgres that are enabled automatically
+The following are enabled automatically on either the `PG_PARSE_DB` or `postgres` databases:
+- [PostGIS](https://postgis.net) - spatial database extender for PostgreSQL object-relational database
+- [pgAudit](https://www.pgaudit.org) - provide the tools needed to produce audit logs required to pass certain government, financial, or ISO certification audits
+- [pgAudit-set_user](https://github.com/pgaudit/set_user) - allows switching users and optional privilege escalation with enhanced logging and control
+- [pgBadger](https://pgbadger.darold.net) - log analyzer built for speed with fully detailed reports and professional rendering
+- [pgBackrest](https://pgbackrest.org) - eliable, easy-to-use backup and restore solution that can seamlessly scale up to the largest databases and workloads by utilizing algorithms that are optimized for database-specific requirements
+- [pg_repack](https://reorg.github.io/pg_repack/) - Reorganize tables in PostgreSQL databases with minimal locks
+- [wal2json](https://github.com/eulerto/wal2json) - an output plugin for logical decoding
+- [pgStatStatements](https://www.postgresql.org/docs/current/pgstatstatements.html) - provides a means for tracking planning and execution statistics of all SQL statements executed by a server (needed for PMM)
+- [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) - Monitor the health of your database infrastructure, explore new patterns in database behavior, and manage and improve the performance of your databases no matter where they are located or deployed
+    - Username/passed - admin/admin
+    - Goto `Settings->Add Instance to PMM->PostgreSQL`, enter `db` for hostname and the `Username` and `Password` above, then click `Add service`. Note it can take up to 5 minutes for data to start populating. PMM will let you know if it has trouble connecting. You should immediately see that PMM is able to read your database `version` correctly on its dashboard
+    - Learn more about PMM by looking through the [documentation](https://docs.percona.com/percona-monitoring-and-management/index.html)
+
 ## Environment Variables
 
 ```
-POSTGRES_PASSWORD # Password for postgress db cluster
-PG_PARSE_USER # Username for logging into PG_PARSE_DB
-PG_PARSE_PASSWORD # Password for logging into PG_PARSE_DB
+POSTGRES_PASSWORD # Password for postgress db cluster (Be sure to changes this in real deployments)
+PG_PARSE_USER # Username for logging into PG_PARSE_DB (Be sure to changes this in real deployments)
+PG_PARSE_PASSWORD # Password for logging into PG_PARSE_DB (Be sure to changes this in real deployments)
 PG_PARSE_DB # Name of parse-hipaa database
+PMM_USER=pmm # Username for Percona Monitor Managemet (Be sure to changes this in real deployments)
+PMM_PASSWORD=pmm # Password for Percona Monitor Managemet (Be sure to changes this in real deployments)
+PMM_PORT=80 # This is the default port on the docker image
+PMM_TLS_PORT=443 # This is the default TLS port on the docker image
 ```
 
 ## Starting up hipaa-postgres
+
+To get started, the [docker-compose.yml] file provides an example of how to use `hipaa-postgres`, simply type:
+
+```docker-compose up```
+
+You can connect to - [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) by going to `localhost:1080` in your browser
 
 Imporant Note: On the very first run of hipaa-postgres needs time to setup and will not allow connections until it is ready. This is suppose to happen as time is needed to configure, initialize, install necessary extensions, and setup any default databases. Let it keep running and eventually you will see something like:
 
