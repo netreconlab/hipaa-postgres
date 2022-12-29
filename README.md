@@ -31,19 +31,27 @@ Multiple images are automatically built for your convenience. Images can be foun
 - `latest` - Points to the newest released version that uses the standard [Postgres image](https://hub.docker.com/_/postgres)
 - `main` - Points to most up-to-date code that uses the standard [Postgres image](https://hub.docker.com/_/postgres) and will eventually show up in a future release. This tag can contain breaking changes
 - `x-x.x` - Points to a specific Postgres and Postgis version that uses the standard [Postgres image](https://hub.docker.com/_/postgres)
+- `x-x.x-pgpool` - Points to a specific Postgres and Postgis version that uses the standard [Postgres image](https://hub.docker.com/_/postgres). These images alson contain [pgpool](https://www.pgpool.net) and can be configured for High Availability
 - `x-x.x-percona` - Points to a specific version that uses the [Percona Distribtution for PostgreSQL](https://www.percona.com/software/postgresql-distribution) image
 
 ## Additional Packages inside of hipaa-postgres that are enabled automatically
 The following are enabled automatically on either the `PG_PARSE_DB` or `postgres` databases:
-- [PostGIS](https://postgis.net) - spatial database extender for PostgreSQL object-relational database
-- [pgAudit](https://www.pgaudit.org) - provide the tools needed to produce audit logs required to pass certain government, financial, or ISO certification audits
-- [pgAudit-set_user](https://github.com/pgaudit/set_user) - allows switching users and optional privilege escalation with enhanced logging and control
-- [pgBadger](https://pgbadger.darold.net) - log analyzer built for speed with fully detailed reports and professional rendering
-- [pgBackrest](https://pgbackrest.org) - eliable, easy-to-use backup and restore solution that can seamlessly scale up to the largest databases and workloads by utilizing algorithms that are optimized for database-specific requirements
+- [PostGIS](https://postgis.net) - Spatial database extender for PostgreSQL object-relational database
+- [pgAudit](https://www.pgaudit.org) - Provide the tools needed to produce audit logs required to pass certain government, financial, or ISO certification audits
+- [pgAudit-set_user](https://github.com/pgaudit/set_user) - Allows switching users and optional privilege escalation with enhanced logging and control
+- [pgBadger](https://pgbadger.darold.net) - Log analyzer built for speed with fully detailed reports and professional rendering
+- [pgBackrest](https://pgbackrest.org) - Reliable, easy-to-use backup and restore solution that can seamlessly scale up to the largest databases and workloads by utilizing algorithms that are optimized for database-specific requirements
 - [pg_repack](https://reorg.github.io/pg_repack/) - Reorganize tables in PostgreSQL databases with minimal locks
-- [wal2json](https://github.com/eulerto/wal2json) - an output plugin for logical decoding
-- [pgStatStatements](https://www.postgresql.org/docs/current/pgstatstatements.html) - provides a means for tracking planning and execution statistics of all SQL statements executed by a server (needed for PMM)
+- [wal2json](https://github.com/eulerto/wal2json) - An output plugin for logical decoding
+- [pgStatStatements](https://www.postgresql.org/docs/current/pgstatstatements.html) - Provides a means for tracking planning and execution statistics of all SQL statements executed by a server (needed for PMM)
 - [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) - Monitor the health of your database infrastructure, explore new patterns in database behavior, and manage and improve the performance of your databases no matter where they are located or deployed
+
+### pgpool tagged images
+Images that are tagged with `-pgpool` have additional packages to make it easier to configure `hipaa-postgres` to work with [pgpool](https://www.pgpool.net). The additional packages are below:
+- [pgpool](https://www.pgpool.net) - Manages a pool of PostgreSQL servers to achieve some features that are not available with single PostgreSQL installation. The features include: High Availability, Load balancing, Connection Pooling, Online Recovery, Limiting Exceeding Connections, Watchdog, In Memory Query Cache
+- [iputils-ping](https://github.com/iputils/iputils) - A utility for Linux networking
+- [openssh-server](https://github.com/iputils/iputils) - Connectivity tool for remote login with the SSH protocol
+- [supervisor](http://supervisord.org/#) - Client/server system that allows its users to monitor and control a number of processes on UNIX-like operating systems
 
 ## Environment Variables
 
