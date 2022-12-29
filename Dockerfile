@@ -27,20 +27,25 @@ USER root
 RUN mkdir -p /usr/local/bin
 COPY ./scripts/update-postgis.sh /usr/local/bin
 
-#Install additional scripts. These are run in abc order during initial start
+# Install additional scripts. These are run in abc order during initial start
 COPY ./scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/setup-0-pgaudit.sh
 COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/setup-1-pgBadger.sh
 COPY ./scripts/setup-2-wal2json.sh /docker-entrypoint-initdb.d/setup-2-wal2json.sh
 COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/setup-3-pg_repack.sh
-#COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh
+COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh
+COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/setup-5-pmm.sh
 COPY ./scripts/setup-dbs-no-postgis.sh /docker-entrypoint-initdb.d/setup-dbs.sh
 RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \ 
+#COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh \
+RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-1-pgBadger.sh \
       /docker-entrypoint-initdb.d/setup-2-wal2json.sh \
       /docker-entrypoint-initdb.d/setup-3-pg_repack.sh \
+      /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh \
+      /docker-entrypoint-initdb.d/setup-5-pmm.sh \
       /docker-entrypoint-initdb.d/setup-dbs.sh
 
-#Install script for ParseCareKit to be run after first run
+# Install script for ParseCareKit to be run after first run
 RUN mkdir parseScripts
 COPY ./scripts/setup-parse-index.sh ./parseScripts/setup-parse-index.sh
 RUN chmod +x ./parseScripts/setup-parse-index.sh
