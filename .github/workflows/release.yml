@@ -15,7 +15,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-jobs:  
+jobs:
   docker:
     runs-on: ubuntu-latest
     permissions:
@@ -87,7 +87,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
- 
+
   singularity:
     needs: docker
     runs-on: ubuntu-latest
@@ -110,7 +110,11 @@ jobs:
       - name: Get branch name
         run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-      - name: Create tag for Singularity
+      - name: Update Singularity file tag
+        run: |
+          sed -i "s/latest/$BRANCH/" ./Singularity
+
+      - name: Build Singularity image 
         if: ${{ env.keepgoing == 'true' }}
         env:
           recipe: ${{ matrix.recipe }}
@@ -130,10 +134,6 @@ jobs:
            echo "Present working directory: $PWD"
            ls
          fi
-
-      - name: Update Singularity file tag
-        run: |
-          sed -i "s/latest/$tag/" ./Singularity
 
       - name: Login and Deploy Container
         env:
