@@ -27,13 +27,13 @@ COPY ./scripts/update-postgis.sh /usr/local/bin/update-postgis.sh
 COPY ./scripts/setup-parse-index.sh ./parseScripts/setup-parse-index.sh
 
 # Install additional scripts. These are run in abc order during initial start
-COPY ./scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/setup-0-pgaudit.sh
-COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/setup-1-pgBadger.sh
-COPY ./scripts/setup-2-wal2json.sh /docker-entrypoint-initdb.d/setup-2-wal2json.sh
-COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/setup-3-pg_repack.sh
-COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh
-COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/setup-5-pmm.sh
-COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/setup-dbs.sh
+COPY ./scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-2-wal2json.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/
 RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-1-pgBadger.sh \
       /docker-entrypoint-initdb.d/setup-2-wal2json.sh \
