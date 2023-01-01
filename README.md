@@ -85,7 +85,7 @@ If you are plan on using hipaa-postgres in production. You should run the additi
 The `setup-parse-index.sh` file is already in the container. You just have to run it.
 
 1. Log into your docker container, type: ```docker exec -u postgres -ti parse-hipaa_db_1 bash```
-2. Run the script, type: ```./parseScripts/setup-parse-index.h```
+2. Run the script, type: ```/usr/local/bin/setup-parse-index.h```
 
 If you want to persist the data in the database, you can uncomment the volume lines in [docker-compose.yml](https://github.com/netreconlab/hipaa-postgres/blob/a2d8c2dce8f8288ad8d7b5dbf1c0dc676a466f32/docker-compose.yml#L16-L19). Be sure to change the directory to secure place that docker has access to.
 
