@@ -16,7 +16,6 @@ RUN apt-get update \
       postgresql-$PG_MAJOR-pgaudit \
       postgresql-$PG_MAJOR-set-user \
       postgresql-$PG_MAJOR-repack \
-      postgresql-$PG_MAJOR-wal2json \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /docker-entrypoint-initdb.d
 
@@ -24,7 +23,6 @@ RUN apt-get update \
 COPY ./scripts/initdb-postgis.sh /docker-entrypoint-initdb.d/10_postgis.sh
 COPY ./scripts/setup-0-pgaudit.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/
-COPY ./scripts/setup-2-wal2json.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/
@@ -37,7 +35,6 @@ COPY ./scripts/setup-parse-index.sh /usr/local/bin/setup-parse-index.sh
 # Make all scripts executable
 RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-1-pgBadger.sh \
-      /docker-entrypoint-initdb.d/setup-2-wal2json.sh \
       /docker-entrypoint-initdb.d/setup-3-pg_repack.sh \
       /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh \
       /docker-entrypoint-initdb.d/setup-5-pmm.sh \
