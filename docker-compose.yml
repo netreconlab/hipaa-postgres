@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
     db:
-        image: netreconlab/hipaa-postgres:latest
+        image: netreconlab/hipaa-postgres:14-3.3
         environment:
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
             PG_PARSE_USER: ${PG_PARSE_USER}
