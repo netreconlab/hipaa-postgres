@@ -16,7 +16,6 @@ RUN apt-get update \
       postgresql-$PG_MAJOR-pgaudit \
       postgresql-$PG_MAJOR-set-user \
       postgresql-$PG_MAJOR-repack \
-      postgresql-$PG_MAJOR-wal2json \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /docker-entrypoint-initdb.d
 
