@@ -41,4 +41,5 @@ RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-dbs.sh \
       /usr/local/bin/setup-parse-index.sh
 
+USER postgres
 CMD ["postgres", "-c", "shared_preload_libraries=pgaudit"]
