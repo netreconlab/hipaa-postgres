@@ -51,7 +51,7 @@ jobs:
         with:
           file: Dockerfile.pgpool
           platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
  
