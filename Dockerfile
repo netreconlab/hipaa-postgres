@@ -16,6 +16,7 @@ RUN apt-get update \
       postgresql-$PG_MAJOR-pgaudit \
       postgresql-$PG_MAJOR-set-user \
       postgresql-$PG_MAJOR-repack \
+      postgresql-$PG_MAJOR-cron \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /docker-entrypoint-initdb.d
 
