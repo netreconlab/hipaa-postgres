@@ -1,4 +1,5 @@
 FROM postgres:15-bullseye
+LABEL maintainer="Network Reconnaissance Lab baker@cs.uky.edu"
 
 ENV POSTGIS_MAJOR 3
 ENV POSTGIS_VERSION 3.3.3+dfsg-1.pgdg110+1
