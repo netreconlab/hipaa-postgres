@@ -7,6 +7,7 @@ psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" 
     \c ${PG_PARSE_DB};
     CREATE EXTENSION postgis;
     CREATE EXTENSION postgis_topology;
+    CREATE EXTENSION pg_repack;
 EOSQL
 
 exec "$@"
