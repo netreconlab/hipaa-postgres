@@ -4,10 +4,10 @@ on:
   schedule:
     - cron: '19 3 * * *'
   push:
-    branches: [ main, 14-3.3, 15-3.4 ]
+    branches: [ main, 15-3.3, 16-3.4 ]
 
 env:
-  LATEST: '15-3.4'
+  LATEST: '16-3.4'
   REGISTRY: docker.io
   IMAGE_NAME: ${{ github.repository }}
 
@@ -34,7 +34,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Log into dockerhub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
