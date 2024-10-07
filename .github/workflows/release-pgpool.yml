@@ -4,10 +4,10 @@ on:
   schedule:
     - cron: '19 3 * * *'
   push:
-    branches: [ main, 15-3.3, 16-3.4 ]
+    branches: [ main, 15-3.3, 17-3.4 ]
 
 env:
-  LATEST: '16-3.4'
+  LATEST: '17-3.4'
   REGISTRY: docker.io
   IMAGE_NAME: ${{ github.repository }}
 
@@ -57,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           file: Dockerfile.pgpool
-          platforms: linux/amd64, linux/arm64/v8, linux/ppc64le
+          platforms: linux/amd64, linux/arm64/v8
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
