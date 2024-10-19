@@ -28,6 +28,7 @@ COPY ./scripts/setup-1-pgBadger.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-3-pg_repack.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-4-pgstatstatements.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-5-pmm.sh /docker-entrypoint-initdb.d/
+COPY ./scripts/setup-6-pgrouting.sh /docker-entrypoint-initdb.d/
 COPY ./scripts/setup-dbs.sh /docker-entrypoint-initdb.d/
 
 # Install scripts to be run after DB initialization
