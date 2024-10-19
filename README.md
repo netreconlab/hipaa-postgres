@@ -44,6 +44,7 @@ The following are enabled automatically on either the `PG_PARSE_DB` or `postgres
 - [pgBackrest](https://pgbackrest.org) - Reliable, easy-to-use backup and restore solution that can seamlessly scale up to the largest databases and workloads by utilizing algorithms that are optimized for database-specific requirements
 - [pg_cron](https://github.com/citusdata/pg_cron) - Run periodic jobs in PostgreSQL
 - [pg_repack](https://reorg.github.io/pg_repack/) - Reorganize tables in PostgreSQL databases with minimal locks
+- [pgRouting](https://github.com/pgRouting/pgrouting) - Provides geospatial routing and other network analysis functionality
 - [pgStatStatements](https://www.postgresql.org/docs/current/pgstatstatements.html) - Provides a means for tracking planning and execution statistics of all SQL statements executed by a server (needed for PMM)
 - [Percona Monitoring and Management (PMM)](https://www.percona.com/software/database-tools/percona-monitoring-and-management) - Monitor the health of your database infrastructure, explore new patterns in database behavior, and manage and improve the performance of your databases no matter where they are located or deployed
 
