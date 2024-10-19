@@ -40,6 +40,7 @@ RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /docker-entrypoint-initdb.d/setup-3-pg_repack.sh \
       /docker-entrypoint-initdb.d/setup-4-pgstatstatements.sh \
       /docker-entrypoint-initdb.d/setup-5-pmm.sh \
+      /docker-entrypoint-initdb.d/setup-6-pgrouting.sh \
       /docker-entrypoint-initdb.d/setup-dbs.sh \
       /usr/local/bin/setup-parse-index.sh
 
