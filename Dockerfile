@@ -1,8 +1,12 @@
 FROM postgres:17-bullseye
 
-ENV POSTGIS_MAJOR 3
-ENV POSTGIS_VERSION 3.5.0+dfsg-1.pgdg110+1
-ENV POSTGRES_INITDB_ARGS "--data-checksums"
+LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
+      org.opencontainers.image.description="PostGIS 3.5.0+dfsg-1.pgdg110+1 spatial database extension with PostgreSQL 17 bullseye" \
+      org.opencontainers.image.source="https://github.com/netreconlab/hipaa-postgres/"
+
+ENV POSTGIS_MAJOR=3
+ENV POSTGIS_VERSION=3.5.0+dfsg-1.pgdg110+1
+ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
 RUN apt-get update \
  && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
@@ -17,6 +21,7 @@ RUN apt-get update \
       postgresql-$PG_MAJOR-set-user \
       postgresql-$PG_MAJOR-repack \
       postgresql-$PG_MAJOR-cron \
+      postgresql-$PG_MAJOR-pgrouting \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /docker-entrypoint-initdb.d
 
@@ -43,4 +48,4 @@ RUN chmod +x /docker-entrypoint-initdb.d/setup-0-pgaudit.sh \
       /usr/local/bin/setup-parse-index.sh
 
 USER postgres
-CMD ["postgres", "-c", "shared_preload_libraries=pgaudit"]
+CMD ["postgres", "-c", "shared_preload_libraries=pg_stat_statements,pgaudit,pg_cron"]
