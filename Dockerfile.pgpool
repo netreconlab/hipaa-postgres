@@ -5,7 +5,7 @@ LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
       org.opencontainers.image.source="https://github.com/netreconlab/hipaa-postgres/"
 
 ENV POSTGIS_MAJOR=3
-ENV POSTGIS_VERSION=3.5.0+dfsg-1.pgdg110+1
+ENV POSTGIS_VERSION=3.5.1+dfsg-1.pgdg110+1
 ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
 RUN apt-get update \
