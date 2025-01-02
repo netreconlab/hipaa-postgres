@@ -1,7 +1,7 @@
 FROM postgres:17-bullseye
 
 LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
-      org.opencontainers.image.description="PostGIS 3.5.0+dfsg-1.pgdg110+1 spatial database extension and PGPool with PostgreSQL 17 bullseye" \
+      org.opencontainers.image.description="PostGIS 3.5.1+dfsg-1.pgdg110+1 spatial database extension and PGPool with PostgreSQL 17 bullseye" \
       org.opencontainers.image.source="https://github.com/netreconlab/hipaa-postgres/"
 
 ENV POSTGIS_MAJOR=3
