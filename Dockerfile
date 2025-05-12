@@ -1,4 +1,4 @@
-FROM postgres:17-bookworm
+FROM postgres:17-bullseye
 
 LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
       org.opencontainers.image.description="PostGIS 3.5.2+dfsg-1.pgdg110+1 spatial database extension with PostgreSQL 17 bullseye" \
