@@ -22,7 +22,7 @@ RUN apt-get update \
       postgresql-$PG_MAJOR-repack \
       postgresql-$PG_MAJOR-cron \
       postgresql-$PG_MAJOR-pgrouting \
-      percona-pg-stat-monitor$PG_MAJOR
+      percona-pg-stat-monitor$PG_MAJOR \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /docker-entrypoint-initdb.d
 
