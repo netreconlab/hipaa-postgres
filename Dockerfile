@@ -14,6 +14,7 @@ RUN apt-get update \
       ca-certificates \
       elephant-shed-pgbackrest \
       elephant-shed-pgbadger \
+      percona-pg-stat-monitor17 \
       \
       postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION \
       postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts \
@@ -22,7 +23,6 @@ RUN apt-get update \
       postgresql-$PG_MAJOR-repack \
       postgresql-$PG_MAJOR-cron \
       postgresql-$PG_MAJOR-pgrouting \
-      percona-pg-stat-monitor-17 \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /docker-entrypoint-initdb.d
 
