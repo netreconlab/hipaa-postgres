@@ -15,7 +15,7 @@ services:
             - 127.0.0.1:${DB_PORT}:${DB_PORT}
         # Uncomment volumes below to persist postgres data. Make sure to change directory to store data locally
    #     volumes:
-   #         - /My/Encrypted/Drive/data:/var/lib/postgresql/data #Mount your own drive
+   #         - /My/Encrypted/Drive/data:/var/lib/postgresql/18/docker #Mount your own drive, be sure to change 18 to your respective postgres version
    #         - /My/Encrypted/Drive/archivedir:/var/lib/postgresql/archivedir #Mount your own drive
     monitor:
         image: percona/pmm-server:2
