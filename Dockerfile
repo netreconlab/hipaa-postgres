@@ -1,7 +1,7 @@
 FROM postgres:18-trixie
 
 LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
-      org.opencontainers.image.description="PostGIS 3.6.0+dfsg-2.pgdg13+1 spatial database extension with PostgreSQL 18 trixie" \
+      org.opencontainers.image.description="PostGIS 3.6.1+dfsg-1.pgdg13+1 spatial database extension with PostgreSQL 18 trixie" \
       org.opencontainers.image.source="https://github.com/netreconlab/hipaa-postgres/"
 
 ENV POSTGIS_MAJOR=3
