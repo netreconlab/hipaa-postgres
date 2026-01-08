@@ -1,14 +1,14 @@
 FROM postgres:18-trixie
 
 LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
-      org.opencontainers.image.description="PostGIS 3.6.0+dfsg-2.pgdg13+1 spatial database extension with PostgreSQL 18 trixie" \
+      org.opencontainers.image.description="PostGIS 3.6.1+dfsg-1.pgdg13+1 spatial database extension with PostgreSQL 18 trixie" \
       org.opencontainers.image.source="https://github.com/netreconlab/hipaa-postgres/"
 
 ENV POSTGIS_MAJOR=3
-ENV POSTGIS_VERSION=3.6.0+dfsg-2.pgdg13+1
+ENV POSTGIS_VERSION=3.6.1+dfsg-1.pgdg13+1
 ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
-RUN apt-get update \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
  && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
  && apt-get install -y --no-install-recommends \
       ca-certificates \
