@@ -8,7 +8,7 @@ ENV POSTGIS_MAJOR=3
 ENV POSTGIS_VERSION=3.6.1+dfsg-1.pgdg13+1
 ENV POSTGRES_INITDB_ARGS="--data-checksums"
 
-RUN apt-get update \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
  && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
  && apt-get install -y --no-install-recommends \
       ca-certificates \
