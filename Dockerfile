@@ -1,4 +1,4 @@
-FROM postgres:18-trixie
+FROM postgres:19-trixie
 
 LABEL maintainer="HIPAA Postgres w/ PostGIS Project" \
       org.opencontainers.image.description="PostGIS 3.7.0+dfsg-1.pgdg13+1 spatial database extension with PostgreSQL 18 trixie" \
